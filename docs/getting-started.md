@@ -87,7 +87,7 @@ else:
 
 ## Hosted API Option
 
-If you prefer not to set up your own instance, you can use our [hosted API](https://api.proventra-ai.com):
+If you prefer not to set up your own instance, you can use our [hosted API](https://api.proventra-ai.com/docs):
 
 ```bash
 curl -X POST https://api.proventra-ai.com/api/v1/analyze \

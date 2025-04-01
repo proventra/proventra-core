@@ -71,7 +71,7 @@ else:
 
 ## Hosted API
 
-For quick implementation without setup, use our hosted API service at [https://api.proventra-ai.com/](https://api.proventra-ai.com/).
+For quick implementation without setup, use our hosted API service at [https://api.proventra-ai.com/docs](https://api.proventra-ai.com/docs).
 
 ## Core Components
 
