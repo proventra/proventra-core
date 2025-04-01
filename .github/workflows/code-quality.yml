@@ -22,17 +22,11 @@ jobs:
         python-version: ${{ matrix.python-version }}
         cache: 'pip'
     
-    - name: Install pip and build
-      run: |
-        python -m pip install --upgrade pip build
+    - name: Setup uv
+      uses: astral-sh/setup-uv@v5
     
-    - name: Install uv
-      run: |
-        pip install uv
-    
-    - name: Install dependencies with uv
-      run: |
-        uv pip install -e ".[all,dev]"
+    - name: Install dependencies
+      run: uv pip install -e ".[all,dev]"
     
     - name: Check formatting with Ruff
       run: uv run ruff format --check src tests examples
@@ -61,18 +55,11 @@ jobs:
         python-version: ${{ matrix.python-version }}
         cache: 'pip'
     
-    - name: Install pip and build
-      run: |
-        python -m pip install --upgrade pip build
+    - name: Setup uv
+      uses: astral-sh/setup-uv@v5
     
-    - name: Install uv
-      run: |
-        pip install uv
-    
-    - name: Install dependencies with uv
-      run: |
-        uv pip install -e ".[all,dev]"
+    - name: Install dependencies
+      run: uv pip install -e ".[all,dev]"
     
     - name: Test with pytest
-      run: |
-        uv run pytest 
+      run: uv run pytest 
