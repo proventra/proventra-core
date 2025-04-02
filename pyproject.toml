@@ -3,7 +3,7 @@ requires = ["setuptools>=68.2.2", "wheel>=0.41.2", "setuptools_scm>=8.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "proventra_core"
+name = "proventra-core"
 version = "0.1.0"
 description = "Prompt injection detection and prevention library for LLM applications"
 readme = "README.md"
@@ -12,7 +12,7 @@ license = {text = "MIT"}
 authors = [
     {name = "Gasper Pregelj"}
 ]
-urls = { "Repository" = "https://github.com/proventra/proventra_core" }
+urls = { "Repository" = "https://github.com/proventra/proventra-core" }
 classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",

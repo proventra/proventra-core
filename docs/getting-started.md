@@ -8,16 +8,16 @@ Install using pip:
 
 ```bash
 # Basic installation
-pip install proventra_core
+pip install proventra-core
 
 # With specific LLM provider
-pip install proventra_core[google]
+pip install proventra-core[google]
 
 # With multiple providers
-pip install proventra_core[openai,anthropic]
+pip install proventra-core[openai,anthropic]
 
 # With all providers
-pip install proventra_core[all]
+pip install proventra-core[all]
 ```
 
 ## API Keys
