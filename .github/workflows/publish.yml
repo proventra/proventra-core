@@ -22,7 +22,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install .[all,dev] build twine
+        python -m pip install .[all,dev] twine
     
     - name: Check for syntax errors
       run: python -m ruff check --no-fix
@@ -41,4 +41,5 @@ jobs:
     - name: Publish to PyPI
       env:
         TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
       run: python -m twine upload --verbose dist/* 

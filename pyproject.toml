@@ -10,8 +10,9 @@ readme = "README.md"
 requires-python = ">=3.11,<4.0"
 license = {text = "MIT"}
 authors = [
-    {name = "Proventra Team"}
+    {name = "Gasper Pregelj"}
 ]
+urls = { "Repository" = "https://github.com/proventra/proventra_core" }
 classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
