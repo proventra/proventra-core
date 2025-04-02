@@ -73,42 +73,31 @@ def get_llm(
             from langchain_google_genai import ChatGoogleGenerativeAI
 
             return ChatGoogleGenerativeAI(
-                model=model_name or "gemini-2.0-flash",
-                temperature=temperature
+                model=model_name or "gemini-2.0-flash", temperature=temperature
             )
 
         elif provider == "anthropic":
             from langchain_anthropic import ChatAnthropic
 
-            if not secret_key:
-                return ChatAnthropic(
-                    model_name=model_name or "claude-3.5-sonnet-20240620",
-                    temperature=temperature,
-                    timeout=None,
-                    stop=None,
-                )
-
             return ChatAnthropic(
                 model_name=model_name or "claude-3.5-sonnet-20240620",
                 temperature=temperature,
                 timeout=None,
-                stop=None
+                stop=None,
             )
 
         elif provider == "openai":
             from langchain_openai import ChatOpenAI
 
             return ChatOpenAI(
-                model=model_name or "gpt-3.5-turbo",
-                temperature=temperature
+                model=model_name or "gpt-3.5-turbo", temperature=temperature
             )
 
         elif provider == "mistral":
             from langchain_mistralai.chat_models import ChatMistralAI
 
             return ChatMistralAI(
-                model_name=model_name or "mistral-large-latest",
-                temperature=temperature
+                model_name=model_name or "mistral-large-latest", temperature=temperature
             )
 
     raise ValueError(f"Unsupported LLM provider: {provider}")
