@@ -24,9 +24,3 @@ class TextAnalyzer(ABC):
     def max_tokens(self) -> int:
         """Maximum number of tokens to analyze in a single chunk."""
         pass
-
-    @property
-    @abstractmethod
-    def chunk_overlap(self) -> int:
-        """Number of overlapping tokens between chunks."""
-        pass
