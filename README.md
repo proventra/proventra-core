@@ -89,7 +89,7 @@ The library is organized into the following modules:
 
 4. **Providers** (`proventra_core.providers`)
    - LLM provider factory and configuration
-   - Supports: Gemini, Claude, GPT-4, Mistral
+   - Supports: Google, OpenAI, Anthropic, Mistral
 
 5. **Services** (`proventra_core.services`)
    - `GuardService` - Main service combining analysis and sanitization

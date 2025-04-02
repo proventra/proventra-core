@@ -39,7 +39,7 @@ Output: {"success": false, "sanitized_text": null, "reason": "Input fundamentall
 
     def __init__(
         self,
-        provider: LLMProvider = "gemini",
+        provider: LLMProvider = "google",
         model_name: Optional[str] = None,
         temperature: float = 0.1,
         max_tokens: int = 4096,

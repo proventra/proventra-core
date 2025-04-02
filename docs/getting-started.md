@@ -26,7 +26,7 @@ Before using the library, you'll need an API key from your chosen LLM provider. 
 
 1. Set it in your environment variables:
 ```bash
-# For Google (Gemini)
+# For Google
 export GOOGLE_API_KEY=your-api-key
 
 # For OpenAI

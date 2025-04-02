@@ -33,7 +33,7 @@ if not MODEL_NAME:
 MODEL_UNSAFE_LABEL = os.getenv("CLASSIFICATION_MODEL_UNSAFE_LABEL", "unsafe")
 
 # Get LLM configuration
-LLM_PROVIDER = os.getenv("LLM_PROVIDER", "gemini")
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "google")
 print("Using LLM provider: {LLM_PROVIDER}")
 
 LLM_MODEL_NAME = os.getenv(

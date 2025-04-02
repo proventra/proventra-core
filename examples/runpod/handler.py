@@ -17,7 +17,7 @@ def init_service():
         raise ValueError("CLASSIFICATION_MODEL_NAME environment variable must be set")
 
     # Get LLM configuration
-    llm_provider = os.getenv("LLM_PROVIDER", "gemini")
+    llm_provider = os.getenv("LLM_PROVIDER", "google")
     llm_model_name = os.getenv(
         "LLM_MODEL_NAME", None
     )  # Use provider's default if not specified
