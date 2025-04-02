@@ -51,7 +51,8 @@ dev = [
     "pytest>=8.0.2", 
     "isort>=5.13.2", 
     "mypy>=1.7.0",
-    "ruff>=0.2.2"
+    "ruff>=0.2.2",
+    "build>=1.2.2"
 ]
 
 [tool.setuptools]
