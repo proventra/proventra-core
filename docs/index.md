@@ -15,6 +15,7 @@ To get started with ProventraCore, see the [Getting Started Guide](./getting-sta
 
 ## Documentation Sections
 
+- [Our Approach](./approach.md): Learn about our approach to AI security and prompt injection protection
 - [Core Components](./components.md): Learn about the main components of the library
 - [Advanced Usage](./advanced-usage.md): Explore advanced usage
 - [Deployment](./deployment.md): Learn how to deploy the library in different environments
