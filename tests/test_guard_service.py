@@ -12,17 +12,24 @@ from proventra_core import (
 
 
 class MockAnalyzer(TextAnalyzer):
-    def __init__(self, unsafe_outputs: list[bool]):
+    def __init__(self, unsafe_outputs: list[bool], risk_scores: list[float] = None):
+        super().__init__(threshold=0.5)  # Default threshold
         self.unsafe_outputs = unsafe_outputs
+        self.risk_scores = risk_scores or [
+            0.8 if unsafe else 0.2 for unsafe in unsafe_outputs
+        ]
         self.call_count = 0
 
-    def analyze(self, text: str) -> dict[str, bool]:
-        """Simulates analysis, returning predefined safety status."""
+    def analyze(self, text: str) -> dict[str, bool | float]:
+        """Simulates analysis, returning predefined safety status and risk score."""
         if self.call_count >= len(self.unsafe_outputs):
             raise IndexError(
                 "MockAnalyzer called more times than expected outputs provided."
             )
-        result = {"unsafe": self.unsafe_outputs[self.call_count]}
+        result = {
+            "unsafe": self.unsafe_outputs[self.call_count],
+            "risk_score": self.risk_scores[self.call_count],
+        }
         self.call_count += 1
         return result
 
@@ -51,7 +58,7 @@ class MockSanitizer(TextSanitizer):
 @pytest.fixture
 def mock_analyzer() -> MockAnalyzer:
     # Default behavior can be overridden in tests
-    return MockAnalyzer(unsafe_outputs=[False])
+    return MockAnalyzer(unsafe_outputs=[False], risk_scores=[0.2])
 
 
 @pytest.fixture
@@ -82,11 +89,13 @@ def test_analyze_and_sanitize_safe_input(
 ):
     """Test analyze_and_sanitize when the initial analysis is safe."""
     mock_analyzer.unsafe_outputs = [False]  # Analyzer reports safe
+    mock_analyzer.risk_scores = [0.2]  # Low risk score
     prompt = "This is a safe prompt."
     result = guard_service.analyze_and_sanitize(prompt)
 
     assert isinstance(result, FullAnalysisResult)
     assert not result.unsafe
+    assert result.risk_score == 0.2
     assert result.sanitized is None
     assert result.sanitization_details is None
     assert mock_analyzer.call_count == 1  # Only initial analysis should occur
@@ -99,6 +108,7 @@ def test_analyze_and_sanitize_unsafe_input_sanitization_fails(
 ):
     """Test analyze_and_sanitize when input is unsafe and sanitization fails."""
     mock_analyzer.unsafe_outputs = [True]  # Initial analysis: unsafe
+    mock_analyzer.risk_scores = [0.8]  # High risk score
     failed_sanitization = SanitizationResult(
         success=False, sanitized_text=None, reason="Failed"
     )
@@ -109,6 +119,7 @@ def test_analyze_and_sanitize_unsafe_input_sanitization_fails(
 
     assert isinstance(result, FullAnalysisResult)
     assert result.unsafe  # Original prompt was unsafe
+    assert result.risk_score == 0.8  # High risk score
     assert result.sanitized is None  # Sanitization failed
     assert result.sanitization_details == failed_sanitization
     assert mock_analyzer.call_count == 1  # Only initial analysis
@@ -122,6 +133,7 @@ def test_analyze_and_sanitize_unsafe_input_sanitized_still_unsafe(
 ):
     """Test analyze_and_sanitize when sanitized output is still unsafe."""
     mock_analyzer.unsafe_outputs = [True, True]  # Initial: unsafe, Sanitized: unsafe
+    mock_analyzer.risk_scores = [0.8, 0.7]  # High risk scores
     successful_sanitization = SanitizationResult(
         success=True, sanitized_text="Still unsafe sanitized text", reason=None
     )
@@ -132,6 +144,7 @@ def test_analyze_and_sanitize_unsafe_input_sanitized_still_unsafe(
 
     assert isinstance(result, FullAnalysisResult)
     assert result.unsafe  # Original prompt was unsafe
+    assert result.risk_score == 0.8  # Original high risk score
     assert result.sanitized is None  # Sanitized text was unsafe, so not returned
     assert result.sanitization_details == successful_sanitization
     assert mock_analyzer.call_count == 2  # Initial + sanitized analysis
@@ -145,6 +158,10 @@ def test_analyze_and_sanitize_unsafe_input_sanitized_is_safe(
 ):
     """Test analyze_and_sanitize when sanitized output is safe."""
     mock_analyzer.unsafe_outputs = [True, False]  # Initial: unsafe, Sanitized: safe
+    mock_analyzer.risk_scores = [
+        0.8,
+        0.2,
+    ]  # High risk initial, low risk after sanitization
     safe_sanitized_text = "This is now safe."
     successful_sanitization = SanitizationResult(
         success=True, sanitized_text=safe_sanitized_text, reason=None
@@ -156,6 +173,7 @@ def test_analyze_and_sanitize_unsafe_input_sanitized_is_safe(
 
     assert isinstance(result, FullAnalysisResult)
     assert result.unsafe  # Original prompt was unsafe
+    assert result.risk_score == 0.8  # Original high risk score
     assert result.sanitized == safe_sanitized_text  # Sanitized text is returned
     assert result.sanitization_details == successful_sanitization
     assert mock_analyzer.call_count == 2  # Initial + sanitized analysis

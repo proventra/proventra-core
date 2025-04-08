@@ -3,6 +3,9 @@ from typing import Any, Dict
 
 
 class TextAnalyzer(ABC):
+    def __init__(self, threshold: float = 0.5):
+        self.threshold = threshold
+
     @abstractmethod
     def analyze(self, text: str) -> Dict[str, Any]:
         """
@@ -12,8 +15,9 @@ class TextAnalyzer(ABC):
             text: The text to analyze
 
         Returns:
-            Dict containing at minimum:
-            - unsafe: bool - True if text contains prompt injection, False if safe
+            Dict containing:
+            - unsafe: bool - True if risk_score >= threshold
+            - risk_score: float - Risk score between 0 and 1
 
             Can be extended with additional properties in the future without breaking API
         """
