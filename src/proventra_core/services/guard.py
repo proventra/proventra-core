@@ -14,7 +14,7 @@ class GuardService:
         Analyzes text for safety without sanitization.
         """
         result = self.analyzer.analyze(text)
-        return AnalysisResult(unsafe=result["unsafe"])
+        return AnalysisResult(unsafe=result["unsafe"], risk_score=result["risk_score"])
 
     def sanitize(self, text: str) -> SanitizationResult:
         """
@@ -35,7 +35,10 @@ class GuardService:
         # If safe, return initial analysis only, no sanitization details needed
         if not is_unsafe:
             return FullAnalysisResult(
-                unsafe=is_unsafe, sanitized=None, sanitization_details=None
+                unsafe=is_unsafe,
+                risk_score=analysis_result.risk_score,
+                sanitized=None,
+                sanitization_details=None,
             )
 
         # If unsafe, attempt to sanitize
@@ -49,6 +52,7 @@ class GuardService:
             # Return original analysis, include failed sanitization details
             return FullAnalysisResult(
                 unsafe=is_unsafe,
+                risk_score=analysis_result.risk_score,
                 sanitized=None,
                 sanitization_details=sanitization_result,
             )
@@ -63,6 +67,7 @@ class GuardService:
             # Return original analysis, include the sanitization attempt details, but don't provide the unsafe sanitized text
             return FullAnalysisResult(
                 unsafe=is_unsafe,
+                risk_score=analysis_result.risk_score,
                 sanitized=None,  # Don't return the unsafe sanitized text
                 sanitization_details=sanitization_result,  # Include details of the attempt
             )
@@ -71,6 +76,7 @@ class GuardService:
         # Return original analysis, include successful sanitization details, and the safe sanitized text
         return FullAnalysisResult(
             unsafe=is_unsafe,
+            risk_score=analysis_result.risk_score,
             sanitized=sanitization_result.sanitized_text,
             sanitization_details=sanitization_result,
         )

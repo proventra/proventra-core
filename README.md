@@ -58,6 +58,7 @@ guard = GuardService(analyzer, sanitizer)
 # Analyze text
 analysis = guard.analyze("Some potentially unsafe text")
 print(f"Unsafe: {analysis.unsafe}")
+print(f"Unsafe: {analysis.risk_score}")
 
 # Analyze and sanitize
 result = guard.analyze_and_sanitize("Some potentially unsafe text")
@@ -105,14 +106,27 @@ from typing import Dict, Any
 class CustomAnalyzer(TextAnalyzer):
     def __init__(self, threshold=0.5):
         self.threshold = threshold
+        self.risk_scores = {
+            "hack": 0.9,
+            "ignore": 0.8,
+            "system": 0.7
+        }
         
     def analyze(self, text: str) -> Dict[str, Any]:
         # Your custom analysis logic
-        unsafe = any(bad_word in text.lower() for bad_word in ["hack", "ignore", "system"])
+        text_lower = text.lower()
+        matched_keywords = [word for word in self.risk_scores.keys() if word in text_lower]
+        
+        # Calculate overall risk score based on highest risk word found
+        risk_score = 0.2  # Default low risk
+        if matched_keywords:
+            risk_score = max(self.risk_scores[word] for word in matched_keywords)
+            
         return {
-            "unsafe": unsafe,
-            # You can include additional properties
-            "matched_keywords": [word for word in ["hack", "ignore", "system"] if word in text.lower()]
+            "unsafe": risk_score > treshold,
+            "risk_score": risk_score,
+            "matched_keywords": matched_keywords,
+            "word_risks": {word: self.risk_scores[word] for word in matched_keywords}
         }
         
     @property

@@ -15,6 +15,7 @@ class TransformersAnalyzer(TextAnalyzer):
         model_name: str,
         unsafe_label: str = "unsafe",
         max_analysis_tokens: Optional[int] = None,
+        threshold: float = 0.5,
     ):
         """
         Initialize the analyzer.
@@ -23,7 +24,9 @@ class TransformersAnalyzer(TextAnalyzer):
             model_name: HuggingFace model name for classification
             unsafe_label: Label used to identify unsafe content
             max_analysis_tokens: Optional override for maximum tokens per chunk
+            threshold: Risk score threshold for unsafe classification (0 to 1)
         """
+        super().__init__(threshold)
         self.classifier = pipeline("text-classification", model=model_name)
         self.unsafe_label = unsafe_label
 
@@ -55,15 +58,30 @@ class TransformersAnalyzer(TextAnalyzer):
     def chunk_overlap(self) -> int:
         return self.CHUNK_OVERLAP
 
-    def _analyze_single_chunk(self, chunk: str) -> bool:
-        """Analyzes a single chunk of text and returns if it's unsafe."""
+    def _analyze_single_chunk(self, chunk: str) -> tuple[bool, float]:
+        """Analyzes a single chunk of text and returns if it's unsafe and the risk score."""
         try:
             result = self.classifier(chunk)[0]
             is_unsafe = bool(result["label"] == self.unsafe_label)
-            return is_unsafe
+            confidence = result["score"]
+
+            # Calculate risk score:
+            # - For unsafe predictions: higher confidence means higher risk
+            # - For safe predictions: lower confidence means higher risk
+            # - Low confidence predictions (< 0.5) are considered more risky
+            if is_unsafe:
+                # Unsafe with high confidence -> high risk (0.5 to 1.0)
+                # Unsafe with low confidence -> medium risk (0.5 to 0.75)
+                score = 0.5 + (confidence / 2)
+            else:
+                # Safe with high confidence -> low risk (0.0 to 0.25)
+                # Safe with low confidence -> medium risk (0.25 to 0.5)
+                score = 0.5 - (confidence / 2)
+
+            return is_unsafe, score
         except Exception as e:
             print(f"Error in model inference for chunk: {str(e)}")
-            return True  # Treat inference errors as unsafe
+            return True, 1.0  # Treat inference errors as maximum risk
 
     def analyze(self, text: str) -> Dict[str, Any]:
         """Analyzes text, splitting into chunks if it exceeds max_tokens."""
@@ -71,15 +89,15 @@ class TransformersAnalyzer(TextAnalyzer):
 
         if len(chunks) == 1:
             # If only one chunk (or less than max tokens), analyze directly
-            is_unsafe = self._analyze_single_chunk(chunks[0])
-            return {"unsafe": is_unsafe}
+            is_unsafe, score = self._analyze_single_chunk(chunks[0])
+            return {"unsafe": score >= self.threshold, "risk_score": round(score, 3)}
         else:
             print(
                 f"Input text too long, splitting into {len(chunks)} chunks for analysis."
             )
             results = [self._analyze_single_chunk(chunk) for chunk in chunks]
 
-            # If any chunk is unsafe, the whole text is unsafe
-            overall_unsafe = any(results)
-            print(f"Chunk analysis results: Unsafe={overall_unsafe}")
-            return {"unsafe": overall_unsafe}
+            # Take the maximum risk score across all chunks
+            max_score = round(max(score for _, score in results), 3)
+            print(f"Chunk analysis results: Risk score={max_score}")
+            return {"unsafe": max_score >= self.threshold, "risk_score": max_score}
