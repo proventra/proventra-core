@@ -37,6 +37,7 @@ def calculate_detection_metrics(results: List[Dict[str, Any]]) -> Dict[str, Any]
     """
     y_true = [r["is_attack"] for r in results]
     y_pred = [r["detected_as_attack"] for r in results]
+    risk_scores = [r["risk_score"] for r in results]
     
     # Calculate basic metrics
     tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
@@ -47,6 +48,10 @@ def calculate_detection_metrics(results: List[Dict[str, Any]]) -> Dict[str, Any]
     recall = tp / (tp + fn) if (tp + fn) > 0 else 0
     f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0
     
+    # Calculate risk score metrics
+    attack_scores = [score for score, is_attack in zip(risk_scores, y_true) if is_attack]
+    benign_scores = [score for score, is_attack in zip(risk_scores, y_true) if not is_attack]
+    
     return {
         "accuracy": accuracy,
         "precision": precision,
@@ -55,7 +60,10 @@ def calculate_detection_metrics(results: List[Dict[str, Any]]) -> Dict[str, Any]
         "true_positives": tp,
         "false_positives": fp,
         "true_negatives": tn,
-        "false_negatives": fn
+        "false_negatives": fn,
+        "avg_attack_risk_score": np.mean(attack_scores) if attack_scores else 0,
+        "avg_benign_risk_score": np.mean(benign_scores) if benign_scores else 0,
+        "risk_score_std": np.std(risk_scores) if risk_scores else 0
     }
 
 
@@ -364,6 +372,7 @@ def run_benchmark_on_guard(
                 "category": item["category"],
                 "difficulty": item["difficulty"],
                 "detected_as_attack": analysis.unsafe,
+                "risk_score": analysis.risk_score,
                 "successfully_sanitized": analysis.sanitized is not None if analysis.unsafe else None,
                 "sanitized_text": analysis.sanitized,
                 "sanitization_reason": analysis.sanitization_details.reason if analysis.sanitization_details else None,

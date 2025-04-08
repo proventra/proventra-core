@@ -69,9 +69,16 @@ def parse_args():
     )
     
     parser.add_argument(
+        "--threshold",
+        type=float,
+        default=0.5,
+        help="Risk score threshold for attack detection"
+    )
+    
+    parser.add_argument(
         "--output_dir", 
         type=str, 
-        default="./benchmark_results", 
+        default="./benchmark/results", 
         help="Directory to save benchmark results"
     )
     
@@ -98,13 +105,15 @@ def setup_guard_service(
     model_name: Optional[str] = None,
     temperature: float = 0.1,
     max_tokens: int = 4096,
+    threshold: float = 0.5,
     api_key: Optional[str] = None
 ) -> GuardService:
     """Set up a GuardService instance for benchmarking."""
     print(f"Setting up analyzer with model: {model_path}")
     analyzer = TransformersAnalyzer(
         model_name=model_path,
-        unsafe_label=unsafe_label
+        unsafe_label=unsafe_label,
+        threshold=threshold
     )
     
     print(f"Setting up sanitizer with provider: {provider}, model: {model_name}")
@@ -120,10 +129,12 @@ def setup_guard_service(
     return GuardService(analyzer, sanitizer)
 
 
-def setup_output_directory(output_dir: str) -> str:
+def setup_output_directory(output_dir: str, model_path: str, model_name: str) -> str:
     """Set up the output directory with a timestamp."""
     timestamp = time.strftime("%Y%m%d_%H%M%S")
-    benchmark_dir = f"{output_dir}_{timestamp}"
+    normalized_model_name = model_name.replace("/", "-")
+    normalized_model_path = model_path.replace("/", "-")
+    benchmark_dir = f"{output_dir}/{timestamp}_{normalized_model_path}_{normalized_model_name}"
     
     # Create output directory
     os.makedirs(benchmark_dir, exist_ok=True)
@@ -147,7 +158,7 @@ def main():
     args = parse_args()
     
     # Set up output directory
-    output_dir = setup_output_directory(args.output_dir)
+    output_dir = setup_output_directory(args.output_dir, args.model_path, args.model_name)
     
     # Save configuration
     config = {
@@ -157,6 +168,7 @@ def main():
         "temperature": args.temperature,
         "max_tokens": args.max_tokens,
         "unsafe_label": args.unsafe_label,
+        "threshold": args.threshold,
         "timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
     }
     save_config(config, output_dir)
@@ -169,6 +181,7 @@ def main():
         model_name=args.model_name,
         temperature=args.temperature,
         max_tokens=args.max_tokens,
+        threshold=args.threshold,
         api_key=args.api_key
     )
     
@@ -192,7 +205,11 @@ def main():
     
     print(f"Sanitization success rate: {report['sanitization']['sanitization_success_rate']:.2f}")
     print(f"Average processing time: {report['performance']['avg_processing_time']:.2f} seconds")
-    print(f"Results saved to: {output_dir}")
+    print(f"\nRisk Score Metrics:")
+    print(f"  Average attack risk score: {report['detection']['avg_attack_risk_score']:.2f}")
+    print(f"  Average benign risk score: {report['detection']['avg_benign_risk_score']:.2f}")
+    print(f"  Risk score std deviation: {report['detection']['risk_score_std']:.2f}")
+    print(f"\nResults saved to: {output_dir}")
     
 
 if __name__ == "__main__":
