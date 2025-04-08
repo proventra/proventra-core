@@ -6,9 +6,10 @@ from ..sanitizers.results import SanitizationResult
 
 @dataclass
 class AnalysisResult:
-    """Result of safety analysis containing only the binary classification."""
+    """Result of safety analysis containing binary classification and risk score."""
 
     unsafe: bool
+    risk_score: float
 
 
 @dataclass
