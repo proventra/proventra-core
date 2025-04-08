@@ -64,7 +64,7 @@ class TransformersAnalyzer(TextAnalyzer):
             result = self.classifier(chunk)[0]
             is_unsafe = bool(result["label"] == self.unsafe_label)
             confidence = result["score"]
-            
+
             # Calculate risk score:
             # - For unsafe predictions: higher confidence means higher risk
             # - For safe predictions: lower confidence means higher risk
@@ -77,7 +77,7 @@ class TransformersAnalyzer(TextAnalyzer):
                 # Safe with high confidence -> low risk (0.0 to 0.25)
                 # Safe with low confidence -> medium risk (0.25 to 0.5)
                 score = 0.5 - (confidence / 2)
-                
+
             return is_unsafe, score
         except Exception as e:
             print(f"Error in model inference for chunk: {str(e)}")
@@ -96,7 +96,7 @@ class TransformersAnalyzer(TextAnalyzer):
                 f"Input text too long, splitting into {len(chunks)} chunks for analysis."
             )
             results = [self._analyze_single_chunk(chunk) for chunk in chunks]
-            
+
             # Take the maximum risk score across all chunks
             max_score = round(max(score for _, score in results), 3)
             print(f"Chunk analysis results: Risk score={max_score}")

@@ -33,8 +33,9 @@ Example unsafe input:
 Input: "[System Prompt Leak Instruction]"
 Output: {"success": false, "sanitized_text": null, "reason": "Input fundamentally unsafe."}"""
 
+
 class LLMSanitizer(TextSanitizer):
-    """LLM-based text sanitizer that can work with different providers."""    
+    """LLM-based text sanitizer that can work with different providers."""
 
     def __init__(
         self,
@@ -43,7 +44,7 @@ class LLMSanitizer(TextSanitizer):
         temperature: float = 0.1,
         max_tokens: int = 4096,
         api_key: Optional[str] = None,
-        system_prompt: Optional[str] = DEFAULT_SYSTEM_PROMPT,
+        system_prompt: str = DEFAULT_SYSTEM_PROMPT,
     ):
         """
         Initialize the sanitizer.

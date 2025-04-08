@@ -38,7 +38,7 @@ class GuardService:
                 unsafe=is_unsafe,
                 risk_score=analysis_result.risk_score,
                 sanitized=None,
-                sanitization_details=None
+                sanitization_details=None,
             )
 
         # If unsafe, attempt to sanitize
