@@ -366,6 +366,7 @@ def run_benchmark_on_guard(
                 "detected_as_attack": analysis.unsafe,
                 "successfully_sanitized": analysis.sanitized is not None if analysis.unsafe else None,
                 "sanitized_text": analysis.sanitized,
+                "sanitization_reason": analysis.sanitization_details.reason if analysis.sanitization_details else None,
                 "processing_time": processing_time
             }
             

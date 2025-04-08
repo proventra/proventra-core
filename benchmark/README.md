@@ -23,7 +23,19 @@ This module provides benchmarking functionality for evaluating the ProventraCore
 Install the required dependencies:
 
 ```bash
-pip install -r requirements.txt
+# Install uv (if not already installed)
+pip install uv
+
+# Create a virtual environment
+uv venv
+
+# Activate the virtual environment
+source .venv/bin/activate  # On Unix/MacOS
+# or
+.venv\Scripts\activate  # On Windows
+
+# Install dependencies with uv
+uv pip install -e ".[all,dev]"
 ```
 
 ## Usage
@@ -33,6 +45,12 @@ Run the benchmark with a classifier model and LLM provider:
 ```bash
 cd examples/benchmark
 python run_benchmark.py --model_path "classifier/model" --unsafe_labe "unsafe" --provider "google" --model_name "gemini-2.0-flash"
+
+## protectai example
+python run_benchmark.py --model_path "protectai/deberta-v3-base-prompt-injection-v2" --unsafe_label "INJECTION"  --provider "google" --model_name "gemini-2.0-flash"     
+
+## arch-guar example
+python run_benchmark.py --model_path "katanemolabs/Arch-Guard" --unsafe_label "JAILBREAK"  --provider "google" --model_name "gemini-2.0-flash"     
 ```
 
 ### Command Line Arguments
