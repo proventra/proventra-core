@@ -141,6 +141,10 @@ class CustomAnalyzer(TextAnalyzer):
 guard = GuardService(CustomAnalyzer(threshold=0.7), existing_sanitizer)
 ```
 
+## Benchmarking
+
+You can use the benchmark to figure out which configuration works best for you. See the [benchmark documentation](benchmark/README.md).
+
 ## Deployment Examples
 
 The repository includes examples for deploying the library:

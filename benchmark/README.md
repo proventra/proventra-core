@@ -1,6 +1,6 @@
 # ProventraCore Benchmark
 
-This module provides benchmarking functionality for evaluating the ProventraCore library's effectiveness in detecting and mitigating prompt injection attacks.
+This module provides benchmarking functionality for evaluating the library's effectiveness in detecting and mitigating prompt injection attacks.
 
 ## Features
 
@@ -79,4 +79,6 @@ The benchmark creates a timestamped directory with the following:
 
 ## Extending the Test Data
 
-To add more test cases, modify the `data/test_data.py` file by adding entries to either `PROMPT_INJECTION_ATTACKS` or `LEGITIMATE_REQUESTS`. 
+To add more test cases, modify the `data/test_data.py` file by adding entries to either `PROMPT_INJECTION_ATTACKS` or `LEGITIMATE_REQUESTS`.
+
+If you find that the data doesn't represent the attacks well, please report.
