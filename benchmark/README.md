@@ -4,12 +4,16 @@ This module provides benchmarking functionality for evaluating the library's eff
 
 ## Features
 
-- Comprehensive evaluation of detection accuracy
+- Evaluation of detection accuracy
 - Measurement of sanitization effectiveness
 - Performance metrics (processing time)
 - Analysis by attack category and difficulty level
 - Visualization of results with plots
 - Detailed JSON reports
+
+## Results
+
+You can check the [results](./results/) folder. Each run is stored in its own folder `timestamp_classifier-model_sanitizer-model`.
 
 ## Requirements
 

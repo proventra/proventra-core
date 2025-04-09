@@ -1,0 +1,10 @@
+{
+  "model_path": "protectai/deberta-v3-base-prompt-injection-v2",
+  "provider": "google",
+  "model_name": "gemini-2.0-flash",
+  "temperature": 0.1,
+  "max_tokens": 4096,
+  "unsafe_label": "INJECTION",
+  "threshold": 0.5,
+  "timestamp": "2025-04-09 15:16:10"
+}
