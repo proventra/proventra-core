@@ -21,10 +21,10 @@ A Python library for detecting and preventing prompt injection attacks in LLM ap
 
 ```bash
 # Basic installation
-pip install proventra-core
-
-# With specific LLM provider
 pip install proventra-core[google]
+
+# With different LLM provider
+pip install proventra-core[openai]
 
 # With multiple providers
 pip install proventra-core[openai,anthropic]
