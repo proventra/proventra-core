@@ -4,12 +4,16 @@ This module provides benchmarking functionality for evaluating the library's eff
 
 ## Features
 
-- Comprehensive evaluation of detection accuracy
+- Evaluation of detection accuracy
 - Measurement of sanitization effectiveness
 - Performance metrics (processing time)
 - Analysis by attack category and difficulty level
 - Visualization of results with plots
 - Detailed JSON reports
+
+## Results
+
+You can check the [results](./results/) folder. Each run is stored in its own folder `timestamp_classifier-model_sanitizer-model`.
 
 ## Requirements
 
@@ -45,22 +49,27 @@ Run the benchmark with a classifier model and LLM provider:
 ```bash
 python benchmark/run_benchmark.py --model_path "classifier/model" --unsafe_labe "unsafe" --provider "google" --model_name "gemini-2.0-flash"
 
-## protectai example
-python benchmark/run_benchmark.py --model_path "protectai/deberta-v3-base-prompt-injection-v2" --unsafe_label "INJECTION"  --provider "google" --model_name "gemini-2.0-flash"     
+## proventra example (uses the default setup with proventra/mdeberta-v3-base-prompt-injection classifier and gemini-2.0-flash)
+python benchmark/run_benchmark.py
 
-## arch-guar example
-python benchmark/run_benchmark.py --model_path "katanemolabs/Arch-Guard" --unsafe_label "JAILBREAK"  --provider "google" --model_name "gemini-2.0-flash"     
+## protectai example
+python benchmark/run_benchmark.py --model_path "protectai/deberta-v3-base-prompt-injection-v2" --unsafe_label "INJECTION"   
+
+## arch-guard example
+python benchmark/run_benchmark.py --model_path "katanemolabs/Arch-Guard" --unsafe_label "JAILBREAK"
 ```
+  
 
 ### Command Line Arguments
 
-- `--model_path`: Path to the transformer model for text classification (required)
+- `--model_path`: Path to the transformer model for text classification (default: proventra/mdeberta-v3-base-prompt-injection)
 - `--provider`: LLM provider for sanitization (default: "google")
 - `--model_name`: Specific model name for sanitization
 - `--temperature`: Temperature for LLM generation (default: 0.1)
 - `--max_tokens`: Maximum tokens for LLM generation (default: 4096)
 - `--output_dir`: Directory to save benchmark results (default: "./benchmark_results")
-- `--unsafe_label`: Label used by the classifier to identify unsafe content (default: "unsafe")
+- `--unsafe_label`: Label used by the classifier to identify unsafe content (default: "INJECTION")
+- `--threshold`: Threshold for the risk score (default: 0.5)
 - `--api_key`: API key for LLM provider (if not in environment variables)
 
 ## Output

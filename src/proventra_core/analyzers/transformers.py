@@ -12,8 +12,8 @@ class TransformersAnalyzer(TextAnalyzer):
 
     def __init__(
         self,
-        model_name: str,
-        unsafe_label: str = "unsafe",
+        model_name: str = "proventra/mdeberta-v3-base-prompt-injection",
+        unsafe_label: str = "INJECTION",
         max_analysis_tokens: Optional[int] = None,
         threshold: float = 0.5,
     ):
@@ -21,8 +21,8 @@ class TransformersAnalyzer(TextAnalyzer):
         Initialize the analyzer.
 
         Args:
-            model_name: HuggingFace model name for classification
-            unsafe_label: Label used to identify unsafe content
+            model_name: HuggingFace model name for classification (default: proventra/mdeberta-v3-base-prompt-injection)
+            unsafe_label: Label used to identify unsafe content (default: INJECTION)
             max_analysis_tokens: Optional override for maximum tokens per chunk
             threshold: Risk score threshold for unsafe classification (0 to 1)
         """

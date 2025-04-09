@@ -36,7 +36,7 @@ def parse_args():
     parser.add_argument(
         "--model_path", 
         type=str, 
-        required=True, 
+        default="proventra/mdeberta-v3-base-prompt-injection",
         help="Path to transformer model for text analysis"
     )
     
@@ -50,6 +50,7 @@ def parse_args():
     
     parser.add_argument(
         "--model_name", 
+        default="gemini-2.0-flash",
         type=str, 
         help="Specific model name for sanitization"
     )
@@ -85,7 +86,7 @@ def parse_args():
     parser.add_argument(
         "--unsafe_label", 
         type=str, 
-        default="unsafe", 
+        default="INJECTION", 
         help="Label used by the classifier model to identify unsafe content"
     )
     
