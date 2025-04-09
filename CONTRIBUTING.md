@@ -66,10 +66,10 @@ Before submitting a PR, run the following command to check your code meets our q
 
 ```bash
 # Format code
-uv run ruff format src tests examples && \
-uv run isort src tests examples && \
+uv run ruff format src tests examples benchmark  && \
+uv run isort src tests examples benchmark  && \
 # Lint and type check
-uv run ruff check src tests examples && \
+uv run ruff check src tests examples benchmark  && \
 uv run mypy src && \
 # Run tests
 uv run pytest
@@ -79,9 +79,9 @@ For a quick check without modifying your code:
 
 ```bash
 # Check only - no modifications
-uv run ruff format --check src tests examples && \
-uv run isort --check-only src tests examples && \
-uv run ruff check src tests examples && \
+uv run ruff format --check src tests examples benchmark  && \
+uv run isort --check-only src tests examples benchmark && \
+uv run ruff check src tests examples benchmark  && \
 uv run mypy src && \
 uv run pytest
 ```
