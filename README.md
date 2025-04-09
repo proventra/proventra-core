@@ -42,7 +42,7 @@ from proventra_core import GuardService, TransformersAnalyzer, LLMSanitizer
 
 # Initialize with default components
 # Note: Make sure to set GOOGLE_API_KEY in your environment variables
-analyzer = TransformersAnalyzer()  # Uses our specialized model
+analyzer = TransformersAnalyzer()  # Uses our model
 sanitizer = LLMSanitizer()  # Uses Google Gemini
 guard = GuardService(analyzer, sanitizer)
 
@@ -115,7 +115,7 @@ MISTRAL_API_KEY=your-mistral-api-key
 
 ## Hosted API
 
-For quick implementation without setup, use our hosted API service at [https://api.proventra-ai.com/docs](https://api.proventra-ai.com/docs).
+For quick implementation without setup or the need to host a classifier model (yes, the library runs a classifier model localy), use our hosted API service at [https://api.proventra-ai.com/docs](https://api.proventra-ai.com/docs).
 
 ## Core Components
 

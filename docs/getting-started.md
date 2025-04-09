@@ -51,7 +51,7 @@ from proventra_core import GuardService, TransformersAnalyzer, LLMSanitizer
 
 # Initialize with default components
 # Note: Make sure to set GOOGLE_API_KEY in your environment variables
-analyzer = TransformersAnalyzer()  # Uses our specialized model
+analyzer = TransformersAnalyzer()  # Uses our model
 sanitizer = LLMSanitizer()  # Uses Google Gemini
 guard = GuardService(analyzer, sanitizer)
 
@@ -105,7 +105,7 @@ GOOGLE_API_KEY=your-google-api-key
 
 For custom setups, you might need:
 ```bash
-# Optional - defaults to our specialized model
+# Optional - defaults to our model
 CLASSIFICATION_MODEL_NAME=path/to/model
 CLASSIFICATION_MODEL_UNSAFE_LABEL=unsafe
 
