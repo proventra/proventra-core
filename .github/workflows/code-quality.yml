@@ -23,13 +23,13 @@ jobs:
         python -m pip install .[all,dev]
     
     - name: Check formatting with Ruff
-      run: python -m ruff format --check src tests examples
+      run: python -m ruff format --check src tests examples benchmark
     
     - name: Check imports with isort
-      run: python -m isort --check-only src tests examples
+      run: python -m isort --check-only src tests examples benchmark
     
     - name: Lint with Ruff
-      run: python -m ruff check src tests examples
+      run: python -m ruff check src tests examples benchmark
     
     - name: Type check with mypy
       run: python -m mypy src
