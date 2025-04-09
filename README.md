@@ -1,4 +1,8 @@
-# ProventraCore
+<div align="center">
+  <img alt="logo" src="./static/logo-square.png" width="100"/>
+</div>
+
+<h1 align="center"> Proventra-core</h1>
 
 A Python library for detecting and preventing prompt injection attacks in LLM applications.
 
@@ -12,7 +16,6 @@ A Python library for detecting and preventing prompt injection attacks in LLM ap
 ## Requirements
 
 - Python 3.11 or higher
-- For GPU acceleration: PyTorch with CUDA support
 
 ## Installation
 
@@ -42,8 +45,8 @@ from proventra_core import GuardService, TransformersAnalyzer, LLMSanitizer
 
 # Initialize with default components
 # Note: Make sure to set GOOGLE_API_KEY in your environment variables
-analyzer = TransformersAnalyzer()  # Uses our model
-sanitizer = LLMSanitizer()  # Uses Google Gemini
+analyzer = TransformersAnalyzer()  # Uses proventra/mdeberta-v3-base-promp-injection model
+sanitizer = LLMSanitizer()  # Uses Google Gemini-2.0-flash
 guard = GuardService(analyzer, sanitizer)
 
 # Analyze text
@@ -61,7 +64,7 @@ else:
     print("Text is safe")
 ```
 
-### Custom Setup (For Advanced Use Cases)
+### Setup with custom models
 
 ```python
 from proventra_core import GuardService, TransformersAnalyzer, LLMSanitizer
