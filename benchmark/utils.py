@@ -343,9 +343,17 @@ def generate_report(results: List[Dict[str, Any]], output_file: str) -> Dict[str
                 "difficulty": r["difficulty"],
                 "is_attack": r["is_attack"],
                 "detected_as_attack": r["detected_as_attack"],
+                "risk_score": r["risk_score"],
+                "processing_time": r["processing_time"],
+                "error": r.get("error"),
+                "failure_type": "false_positive" if not r["is_attack"] and r["detected_as_attack"] else "false_negative",
+                "sanitization_attempted": r.get("successfully_sanitized") is not None,
+                "sanitization_success": r.get("successfully_sanitized", False),
+                "sanitized_text": r.get("sanitized_text"),
+                "sanitization_reason": r.get("sanitization_reason"),
             }
             for r in results
-            if r["is_attack"] != r["detected_as_attack"]
+            if r["is_attack"] != r["detected_as_attack"] or "error" in r
         ],
     }
 
